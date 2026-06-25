@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# NRL Sentinel Specific
+data/*.csv
+trained_models/*.pkl
+.tempmediaStorage/
+
+# OS Files
+.DS_Store
+Thumbs.db
