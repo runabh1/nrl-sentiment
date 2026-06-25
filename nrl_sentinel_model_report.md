@@ -255,6 +255,24 @@ save_all_models(...)       # pickle to trained_models/*.pkl
 
 ---
 
+## Production Deployment & Data Integration
+
+While this application currently uses `data_collector.py` to fetch public datasets (like Yahoo Finance and UCI Machine Learning data), a live production deployment at NRL would connect directly to internal enterprise systems.
+
+### 1. Equipment Sensors (Predictive Maintenance)
+NRL would replace the static dataset fetch with a live connection to their Distributed Control System (DCS) Historian (typically **OSIsoft PI System** or Aspen InfoPlus.21). 
+- A scheduled Python job using the `PIconnect` library or PI Web API would pull the last 30 days of data for specific critical tags (e.g., `TAG_PUMP123_TEMP`).
+- The tags are mapped to standard feature names (`temperature_c`, `pressure_bar`, etc.).
+- The XGBoost model calculates failure probability instantly on the live stream.
+
+### 2. Market Data (GRM Forecasting)
+Instead of Yahoo Finance, NRL would point the API fetcher to their **Refinitiv Eikon**, **Bloomberg Terminal API**, or **S&P Global Platts API** subscription to pull institutional-grade daily benchmark components (Brent, Singapore Gasoil, etc.).
+
+### 3. Internal Financials (Project Overrun & Pipeline)
+The project milestone data and pipeline ramp-up data would be pulled via SQL connection from NRL's **SAP ERP** system (Project Systems module) rather than read from static CSVs.
+
+---
+
 ## Data Integrity Principles
 
 | Principle | Implementation |
