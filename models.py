@@ -83,14 +83,9 @@ def train_grm_model(df: pd.DataFrame):
         X, y, test_size=0.2, shuffle=False
     )
 
-    from xgboost import XGBRegressor
-    model = XGBRegressor(
-        n_estimators=600, max_depth=5, learning_rate=0.01,
-        subsample=0.85, colsample_bytree=0.8,
-        min_child_weight=3, reg_alpha=0.05, reg_lambda=1.0,
-        random_state=42
-    )
-    model.fit(X_train, y_train, eval_set=[(X_test, y_test)], verbose=False)
+    from sklearn.linear_model import Ridge
+    model = Ridge(alpha=1.0, random_state=42)
+    model.fit(X_train, y_train)
 
     preds = model.predict(X_test)
     mae   = mean_absolute_error(y_test, preds)
@@ -157,7 +152,7 @@ def train_grm_model(df: pd.DataFrame):
     sour_grm_scenarios_inr = (grm_usd_base + sour_discount_range * 0.45) * inr_usd_last
 
     feature_importance = pd.Series(
-        model.feature_importances_, index=feature_cols
+        np.abs(model.coef_), index=feature_cols
     ).sort_values(ascending=False)
 
     return {
